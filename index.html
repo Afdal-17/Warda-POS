@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Warda POS Modern Pro v2</title>
+<meta name="description" content="Warda POS - Sistem Point of Sale Modern untuk bisnis Anda">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ==================== SPLASH SCREEN ==================== -->
+<div id="splashScreen" class="splash-screen">
+  <div class="splash-content">
+    <div class="splash-logo-container">
+      <div class="splash-ring ring-1"></div>
+      <div class="splash-ring ring-2"></div>
+      <div class="splash-ring ring-3"></div>
+      <img src="logo.png" alt="Warda POS Logo" class="splash-logo" id="splashLogo">
+    </div>
+    <h1 class="splash-title">Warda</h1>
+    <p class="splash-subtitle">Point of Sale System</p>
+    <div class="splash-loader">
+      <div class="splash-loader-bar"></div>
+    </div>
+    <p class="splash-version">v2.0 Pro</p>
+  </div>
+  <div class="splash-particles" id="splashParticles"></div>
+</div>
+
+<!-- ==================== LOGIN SCREEN ==================== -->
+<div id="loginScreen" class="login-screen" style="display:none;">
+  <div class="login-bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div class="login-card">
+    <div class="login-logo-wrap">
+      <img src="logo.png" alt="Warda" class="login-logo">
+    </div>
+    <h1 class="login-title">Selamat Datang</h1>
+    <p class="login-desc">Masuk ke <strong>Warda POS</strong> untuk melanjutkan</p>
+
+    <div class="login-form">
+      <div class="input-group">
+        <span class="input-icon">👤</span>
+        <input type="text" id="loginUsername" placeholder="Username" autocomplete="off">
+      </div>
+      <div class="input-group">
+        <span class="input-icon">🔒</span>
+        <input type="password" id="loginPassword" placeholder="Password">
+      </div>
+
+      <label class="login-role-label">Masuk sebagai:</label>
+      <div class="role-selector">
+        <button class="role-btn active" data-role="admin" onclick="selectRole('admin',this)" id="roleAdmin">
+          <span class="role-icon">🛡️</span>
+          <span class="role-name">Admin</span>
+          <span class="role-desc">Analytics & Laporan</span>
+        </button>
+        <button class="role-btn" data-role="kasir" onclick="selectRole('kasir',this)" id="roleKasir">
+          <span class="role-icon">💼</span>
+          <span class="role-name">Kasir</span>
+          <span class="role-desc">Kelola Produk & Transaksi</span>
+        </button>
+        <button class="role-btn" data-role="konsumen" onclick="selectRole('konsumen',this)" id="roleKonsumen">
+          <span class="role-icon">🛒</span>
+          <span class="role-name">Konsumen</span>
+          <span class="role-desc">Belanja & Lihat Struk</span>
+        </button>
+      </div>
+
+      <button class="login-btn" onclick="doLogin()" id="loginBtn">
+        <span>Masuk</span>
+        <span class="btn-arrow">→</span>
+      </button>
+
+      <p id="loginError" class="login-error"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MAIN APP ==================== -->
+<div id="mainApp" class="app" style="display:none;">
+
+<aside class="sidebar" id="sidebarNav">
+  <div class="sidebar-header">
+    <img src="logo.png" alt="Warda" class="sidebar-logo">
+    <h2>Warda</h2>
+  </div>
+
+  <div class="sidebar-user-card" id="sidebarUserCard">
+    <div class="user-avatar" id="userAvatar">🛡️</div>
+    <div class="user-info">
+      <span class="user-name" id="sidebarUserName">Admin</span>
+      <span class="user-role" id="sidebarUserRole">Administrator</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav" id="sidebarNavButtons">
+    <!-- Nav buttons are dynamically generated based on role -->
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="nav-btn logout-btn" onclick="doLogout()" id="logoutBtn">
+      <span class="nav-icon">🚪</span><span>Keluar</span>
+    </button>
+  </div>
+</aside>
+
+<main class="main">
+
+<!-- =====================================================
+     ADMIN VIEWS
+     ===================================================== -->
+
+<!-- ADMIN: Dashboard Analytics -->
+<section id="adminDashboard" class="view">
+  <div class="page-header">
+    <h1>📊 Dashboard Analytics</h1>
+    <span class="page-badge">Admin</span>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card stat-gradient-1">
+      <div class="stat-icon">📦</div>
+      <div class="stat-info">
+        <span class="stat-label">Total Produk</span>
+        <h2 id="statTotalProduk">0</h2>
+      </div>
+    </div>
+    <div class="stat-card stat-gradient-2">
+      <div class="stat-icon">🧾</div>
+      <div class="stat-info">
+        <span class="stat-label">Total Transaksi</span>
+        <h2 id="statTotalTrx">0</h2>
+      </div>
+    </div>
+    <div class="stat-card stat-gradient-3">
+      <div class="stat-icon">💰</div>
+      <div class="stat-info">
+        <span class="stat-label">Total Pendapatan</span>
+        <h2 id="statTotalRevenue">Rp 0</h2>
+      </div>
+    </div>
+    <div class="stat-card stat-gradient-4">
+      <div class="stat-icon">👥</div>
+      <div class="stat-info">
+        <span class="stat-label">Pelanggan Terdaftar</span>
+        <h2 id="statTotalCustomers">0</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <div class="panel chart-panel">
+      <h3>📈 Grafik Pendapatan Harian</h3>
+      <canvas id="revenueChart" width="600" height="250"></canvas>
+    </div>
+    <div class="panel chart-panel">
+      <h3>📊 Grafik Jumlah Transaksi</h3>
+      <canvas id="trxChart" width="600" height="250"></canvas>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>🏆 Produk Terlaris</h3>
+    <div id="topProducts" class="top-products-list"></div>
+  </div>
+
+  <div class="panel">
+    <h3>🕐 Transaksi Terkini</h3>
+    <div id="recentTrx" class="recent-trx-list"></div>
+  </div>
+</section>
+
+<!-- =====================================================
+     KASIR VIEWS
+     ===================================================== -->
+
+<!-- KASIR: Kelola Produk -->
+<section id="kasirProduk" class="view">
+  <div class="page-header">
+    <h1>📦 Kelola Produk</h1>
+    <span class="page-badge">Kasir</span>
+  </div>
+
+  <div class="panel add-product-panel">
+    <h3>➕ Tambah Produk Baru</h3>
+    <div class="form-row">
+      <div class="input-group">
+        <span class="input-icon">📝</span>
+        <input id="prodName" placeholder="Nama Produk">
+      </div>
+      <div class="input-group">
+        <span class="input-icon">💰</span>
+        <input id="prodPrice" placeholder="Harga" type="number">
+      </div>
+      <div class="input-group">
+        <span class="input-icon">🎨</span>
+        <input id="prodEmoji" placeholder="Emoji (🍔)">
+      </div>
+      <div class="input-group">
+        <span class="input-icon">📂</span>
+        <input id="prodCategory" placeholder="Kategori">
+      </div>
+      <div class="input-group">
+        <span class="input-icon">📦</span>
+        <input id="prodStock" placeholder="Stok" type="number">
+      </div>
+    </div>
+    <button class="add-btn" onclick="addProduct()">➕ Tambah Produk</button>
+  </div>
+
+  <div class="search-bar" style="margin-bottom:16px;">
+    <span>🔍</span>
+    <input type="text" id="searchProdukKasir" placeholder="Cari produk..." oninput="renderKasirProduk()">
+  </div>
+
+  <div id="kasirProductList" class="product-list-grid"></div>
+</section>
+
+<!-- KASIR: POS / Transaksi -->
+<section id="kasirPOS" class="view">
+  <div class="page-header">
+    <h1>🛒 Proses Transaksi</h1>
+    <span class="page-badge">Kasir</span>
+  </div>
+  <div class="pos-layout">
+    <div class="pos-products">
+      <div class="search-bar">
+        <span>🔍</span>
+        <input type="text" id="searchPOSProduct" placeholder="Cari produk..." oninput="renderKasirPOSGrid()">
+      </div>
+      <div id="kasirPOSGrid" class="grid"></div>
+    </div>
+    <div class="pos-cart">
+      <div class="cart-header">
+        <h3>🛍️ Keranjang</h3>
+        <button class="clear-cart-btn" onclick="clearCart()">Hapus Semua</button>
+      </div>
+      <div class="cart-select-customer">
+        <label>Pelanggan:</label>
+        <select id="kasirCartCustomer" class="customer-select">
+          <option value="">-- Umum --</option>
+        </select>
+      </div>
+      <div id="kasirCart" class="cart-items"></div>
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>Total</span>
+          <h2 id="kasirTotal">Rp 0</h2>
+        </div>
+        <div class="cart-payment">
+          <label>Bayar:</label>
+          <input type="number" id="kasirPayAmount" placeholder="Jumlah bayar" class="pay-input">
+        </div>
+        <button class="checkout-btn" onclick="kasirCheckout()">
+          <span>💳 Proses Pembayaran</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KASIR: Riwayat Transaksi -->
+<section id="kasirHistory" class="view">
+  <div class="page-header">
+    <h1>🧾 Riwayat Transaksi</h1>
+    <span class="page-badge">Kasir</span>
+  </div>
+
+  <div class="history-filters">
+    <input type="date" id="kasirFilterDate" onchange="renderKasirHistory()">
+    <div class="search-bar" style="flex:1;">
+      <span>🔍</span>
+      <input type="text" id="kasirSearchTrx" placeholder="Cari nama pelanggan..." oninput="renderKasirHistory()">
+    </div>
+    <button class="filter-btn" onclick="clearKasirFilter()">✖ Reset</button>
+  </div>
+
+  <div class="history-stats">
+    <div class="history-stat-card">
+      <span class="history-stat-icon">🧾</span>
+      <div>
+        <div class="history-stat-value" id="kasirTrxCount">0</div>
+        <div class="history-stat-label">Total Transaksi</div>
+      </div>
+    </div>
+    <div class="history-stat-card">
+      <span class="history-stat-icon">💰</span>
+      <div>
+        <div class="history-stat-value" id="kasirTrxRevenue">Rp 0</div>
+        <div class="history-stat-label">Total Pendapatan</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="kasirHistoryList" class="history-list"></div>
+</section>
+
+<!-- =====================================================
+     KONSUMEN / PELANGGAN VIEWS
+     ===================================================== -->
+
+<!-- KONSUMEN: Katalog Belanja -->
+<section id="konsumenShop" class="view">
+  <div class="page-header">
+    <h1>🛍️ Katalog Belanja</h1>
+    <span class="page-badge konsumen-badge">Konsumen</span>
+  </div>
+
+  <div class="konsumen-layout">
+    <div class="konsumen-catalog">
+      <div class="search-bar">
+        <span>🔍</span>
+        <input type="text" id="searchKonsumen" placeholder="Cari produk favorit Anda..." oninput="renderKonsumenShop()">
+      </div>
+
+      <!-- Category Filter Chips -->
+      <div class="category-chips" id="categoryChips">
+        <button class="chip active" onclick="filterCategory('all', this)">🏷️ Semua</button>
+      </div>
+
+      <div id="konsumenProductGrid" class="konsumen-grid"></div>
+    </div>
+
+    <div class="konsumen-cart-panel">
+      <div class="cart-header">
+        <h3>🛒 Keranjang Belanja</h3>
+        <button class="clear-cart-btn" onclick="clearKonsumenCart()">Kosongkan</button>
+      </div>
+      <div id="konsumenCart" class="cart-items"></div>
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>Total Belanja</span>
+          <h2 id="konsumenTotal">Rp 0</h2>
+        </div>
+        <div class="cart-payment">
+          <label>Bayar:</label>
+          <input type="number" id="konsumenPayAmount" placeholder="Jumlah bayar" class="pay-input">
+        </div>
+        <button class="checkout-btn konsumen-checkout" onclick="konsumenCheckout()">
+          <span>💳 Bayar Sekarang</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KONSUMEN: Bukti Transaksi / Struk -->
+<section id="konsumenReceipts" class="view">
+  <div class="page-header">
+    <h1>🧾 Bukti Transaksi Saya</h1>
+    <span class="page-badge konsumen-badge">Konsumen</span>
+  </div>
+
+  <div class="konsumen-receipts-summary">
+    <div class="receipt-summary-card">
+      <span class="receipt-summary-icon">🛒</span>
+      <div>
+        <div class="receipt-summary-value" id="myTotalOrders">0</div>
+        <div class="receipt-summary-label">Total Pesanan</div>
+      </div>
+    </div>
+    <div class="receipt-summary-card">
+      <span class="receipt-summary-icon">💸</span>
+      <div>
+        <div class="receipt-summary-value" id="myTotalSpent">Rp 0</div>
+        <div class="receipt-summary-label">Total Belanja</div>
+      </div>
+    </div>
+    <div class="receipt-summary-card">
+      <span class="receipt-summary-icon">📅</span>
+      <div>
+        <div class="receipt-summary-value" id="myLastOrder">-</div>
+        <div class="receipt-summary-label">Terakhir Belanja</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="konsumenReceiptList" class="receipt-card-list"></div>
+</section>
+
+</main>
+</div>
+
+<!-- ==================== RECEIPT MODAL ==================== -->
+<div id="receiptModal" class="modal-overlay" style="display:none;">
+  <div class="receipt-modal">
+    <div class="receipt-paper" id="receiptPaper">
+      <div class="receipt-header">
+        <img src="logo.png" alt="Warda" class="receipt-logo">
+        <h2>WARDA</h2>
+        <p>Point of Sale System</p>
+        <div class="receipt-divider dashed"></div>
+        <p class="receipt-info" id="receiptDate"></p>
+        <p class="receipt-info" id="receiptNo"></p>
+        <p class="receipt-info" id="receiptCashier"></p>
+        <p class="receipt-info" id="receiptCustomer"></p>
+        <div class="receipt-divider"></div>
+      </div>
+      <div class="receipt-body" id="receiptItems"></div>
+      <div class="receipt-divider dashed"></div>
+      <div class="receipt-totals">
+        <div class="receipt-row">
+          <span>Subtotal</span>
+          <span id="receiptSubtotal"></span>
+        </div>
+        <div class="receipt-row receipt-grand-total">
+          <span>TOTAL</span>
+          <span id="receiptTotal"></span>
+        </div>
+        <div class="receipt-row">
+          <span>Bayar</span>
+          <span id="receiptPaid"></span>
+        </div>
+        <div class="receipt-row">
+          <span>Kembali</span>
+          <span id="receiptChange"></span>
+        </div>
+      </div>
+      <div class="receipt-divider dashed"></div>
+      <div class="receipt-footer">
+        <p>Terima kasih telah berbelanja!</p>
+        <p>🙏 Semoga hari Anda menyenangkan</p>
+        <div class="receipt-barcode">||||| |||| ||||| || |||||| ||</div>
+      </div>
+    </div>
+    <div class="receipt-actions">
+      <button class="receipt-btn print-btn" onclick="printReceipt()">🖨️ Cetak Struk</button>
+      <button class="receipt-btn close-btn" onclick="closeReceipt()">✖ Tutup</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
