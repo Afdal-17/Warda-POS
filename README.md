@@ -5,7 +5,7 @@
 
 ![Opening](https://github.com/Afdal-17/Warda-POS/blob/main/images/Screenshot%202026-04-17%20110158.png)
 
-<h2>Opening</h2>
+<h2>Login</h2>
 
 ![Login](https://github.com/Afdal-17/Warda-POS/blob/main/images/Screenshot%202026-04-17%20110256.png)
 
